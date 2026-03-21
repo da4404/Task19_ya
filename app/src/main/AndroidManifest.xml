@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Task19_ya">
         <activity
+            android:name=".CreditsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".setting"
+            android:exported="false" />
+        <activity
             android:name=".AddQuestionActivity"
             android:exported="false" />
         <activity
