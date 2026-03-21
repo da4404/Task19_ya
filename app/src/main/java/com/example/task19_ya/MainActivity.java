@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,12 +15,108 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Random;
 
+public class MainActivity extends AppCompatActivity
+{
+    ArrayList<String> questionsList = new ArrayList<>();
+    TextView tvQuestion, tvDetails;
+    Button btnA1, btnA2, btnA3, btnA4;
+    int currentQuestionIndex = 0;
+    String currentCorrectAnswer;
+    int currentScore = 0;
+    int highScore = 0;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        loadQuestionsFromRaw();
+        loadPersonalQuestions();
+        tvQuestion = findViewById(R.id.tV_question);
+        tvDetails = findViewById(R.id.details);
+        btnA1 = findViewById(R.id.bT_answer1);
+        btnA2 = findViewById(R.id.bT_answer2);
+        btnA3 = findViewById(R.id.bT_answer3);
+        btnA4 = findViewById(R.id.bT_answer4);
+        displayQuestion();
+        android.content.SharedPreferences sp = getSharedPreferences("QuizMasterPrefs", MODE_PRIVATE);
+        highScore = sp.getInt("HighScore", 0);
+        tvDetails.setText("ניקוד: " + currentScore + " | שיא: " + highScore);
+    }
+    public void displayQuestion() {
+        if (questionsList.size() > 0)
+        {
+            String fullLine = questionsList.get(currentQuestionIndex);
+            String[] parts = fullLine.split(";");
+            tvQuestion.setText(parts[0]);
+            currentCorrectAnswer = parts[1];
+            String[] answers = new String[4];
+            answers[0] = parts[1];
+            answers[1] = parts[2];
+            answers[2] = parts[3];
+            answers[3] = parts[4];
+            Random rnd = new Random();
+            for (int i = 0; i < answers.length; i++) {
+                int randomIndex = rnd.nextInt(answers.length);
+                String temp = answers[i];
+                answers[i] = answers[randomIndex];
+                answers[randomIndex] = temp;
+            }
+            btnA1.setText(answers[0]);
+            btnA2.setText(answers[1]);
+            btnA3.setText(answers[2]);
+            btnA4.setText(answers[3]);
+        }
+    }
+    public void loadQuestionsFromRaw()
+    {
+        try
+        {
+            int resourceId = this.getResources().getIdentifier("questions", "raw", this.getPackageName());
+            InputStream iS = this.getResources().openRawResource(resourceId);
+            InputStreamReader iSR = new InputStreamReader(iS);
+            BufferedReader bR = new BufferedReader(iSR);
+            String line = bR.readLine();
+            while (line != null)
+            {
+                questionsList.add(line);
+                line = bR.readLine();
+            }
+            bR.close();
+            iSR.close();
+            iS.close();
+
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this, "שגיאה בטעינת שאלות המערכת", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void loadPersonalQuestions()
+    {
+        try
+        {
+            java.io.FileInputStream fIS = openFileInput("personal_questions.txt");
+            java.io.InputStreamReader iSR = new java.io.InputStreamReader(fIS);
+            java.io.BufferedReader bR = new java.io.BufferedReader(iSR);
+            String line = bR.readLine();
+            while (line != null)
+            {
+                questionsList.add(line);
+                line = bR.readLine();
+            }
+            bR.close();
+            iSR.close();
+            fIS.close();
+
+        } catch (Exception e)
+        {
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -44,5 +144,43 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkAnswer(View view)
+    {
+        Button clickedButton = (Button) view;
+        String answerSelected = clickedButton.getText().toString();
+        if (answerSelected.equals(currentCorrectAnswer))
+        {
+            currentScore++;
+            if (currentScore > highScore)
+            {
+                highScore = currentScore;
+                android.content.SharedPreferences sp = getSharedPreferences("QuizMasterPrefs", MODE_PRIVATE);
+                android.content.SharedPreferences.Editor editor = sp.edit();
+                editor.putInt("HighScore", highScore);
+                editor.commit();
+            }
+            Toast.makeText(this, "כל הכבוד! תשובה נכונה", Toast.LENGTH_SHORT).show();
+        } else
+        {
+            Toast.makeText(this, "טעות! התשובה היא: " + currentCorrectAnswer, Toast.LENGTH_SHORT).show();
+        }
+        tvDetails.setText("ניקוד: " + currentScore + " | שיא: " + highScore);
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questionsList.size())
+        {
+            displayQuestion();
+        }
+        else
+        {
+            Toast.makeText(this, "המשחק הסתיים!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void addPersonalQuestion(View view)
+    {
+        Intent intent = new Intent(this, AddQuestionActivity.class);
+        startActivity(intent);
     }
 }
