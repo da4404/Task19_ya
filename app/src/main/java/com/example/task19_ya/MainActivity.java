@@ -175,6 +175,10 @@ public class MainActivity extends AppCompatActivity
         else
         {
             Toast.makeText(this, "המשחק הסתיים!", Toast.LENGTH_LONG).show();
+            btnA1.setEnabled(false);
+            btnA2.setEnabled(false);
+            btnA3.setEnabled(false);
+            btnA4.setEnabled(false);
         }
     }
 
@@ -182,5 +186,6 @@ public class MainActivity extends AppCompatActivity
     {
         Intent intent = new Intent(this, AddQuestionActivity.class);
         startActivity(intent);
+        finish();
     }
 }
