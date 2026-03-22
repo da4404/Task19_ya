@@ -60,11 +60,13 @@ public class CreditsActivity extends AppCompatActivity {
         if (id == R.id.menu_game) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            finish();
             return true;
         }
         else if (id == R.id.menu_settings) {
             Intent intent = new Intent(this, setting.class);
             startActivity(intent);
+            finish();
             return true;
         }
         else if (id == R.id.menu_credits) {
