@@ -21,6 +21,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * @author Darya 
+ * @version 1.0
+ * @since 23/03/2026
+ * The main activity of the quiz game, handling question loading, display, and scoring.
+ */
 public class MainActivity extends AppCompatActivity
 {
     ArrayList<String> questionsList = new ArrayList<>();
@@ -31,6 +37,13 @@ public class MainActivity extends AppCompatActivity
     int currentScore = 0;
     int highScore = 0;
     String userName = "";
+
+    /**
+     * Initializes the activity, loads questions, and sets up the UI components.
+     * <p>
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -50,6 +63,12 @@ public class MainActivity extends AppCompatActivity
         userName = sp.getString("UserName", "אורח");
         tvDetails.setText("שחקן: " + userName + " | ניקוד: " + currentScore + " | שיא: " + highScore);
     }
+
+    /**
+     * Displays the current question and its answers in shuffled order.
+     * <p>
+     *
+     */
     public void displayQuestion()
     {
         if (questionsList.size() > 0)
@@ -78,6 +97,12 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
+    /**
+     * Loads the initial questions from the raw resource text file.
+     * <p>
+     *
+     */
     public void loadQuestionsFromRaw()
     {
         try
@@ -105,6 +130,12 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "שגיאה בטעינת שאלות המערכת", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * Loads personal questions added by the user from internal storage.
+     * <p>
+     *
+     */
     public void loadPersonalQuestions()
     {
         try
@@ -129,11 +160,27 @@ public class MainActivity extends AppCompatActivity
         {
         }
     }
+
+    /**
+     * Inflates the main menu items from the resource file.
+     * <p>
+     *
+     * @param menu The options menu in which you place your items.
+     * @return true to display the menu.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
+    /**
+     * Handles selection of items from the options menu.
+     * <p>
+     *
+     * @param item The menu item that was selected.
+     * @return boolean Return false to allow normal menu processing to proceed, true to consume it here.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -157,6 +204,12 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Validates the user's selected answer, updates the score and progress.
+     * <p>
+     *
+     * @param view The View component (button) that was clicked.
+     */
     public void checkAnswer(View view)
     {
         if (currentCorrectAnswer == null)
@@ -198,6 +251,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Navigates the user to the activity where they can add personal questions.
+     * <p>
+     *
+     * @param view The View component that triggered the action.
+     */
     public void addPersonalQuestion(View view)
     {
         Intent intent = new Intent(this, AddQuestionActivity.class);

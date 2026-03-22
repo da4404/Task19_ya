@@ -14,11 +14,23 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+/**
+ * @author Darya 
+ * @version 1.0
+ * @since 23/03/2026
+ * This activity allows users to add their own custom questions to the quiz game.
+ */
 public class AddQuestionActivity extends AppCompatActivity
 {
     EditText etQ, etA1, etA2, etA3, etA4;
 
 
+    /**
+     * Initializes the activity and its input fields for question and answers.
+     * <p>
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -33,11 +45,26 @@ public class AddQuestionActivity extends AppCompatActivity
 
 
 
+    /**
+     * Inflates the main menu items from the resource file.
+     * <p>
+     *
+     * @param menu The options menu in which you place your items.
+     * @return true to display the menu.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
+    /**
+     * Handles selection of items from the options menu.
+     * <p>
+     *
+     * @param item The menu item that was selected.
+     * @return boolean Return false to allow normal menu processing to proceed, true to consume it here.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -62,6 +89,12 @@ public class AddQuestionActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Saves the user-provided question and its answers to a local file.
+     * <p>
+     *
+     * @param view The View component that was clicked.
+     */
     public void saveQuestion(View view)
     {
         String q = etQ.getText().toString().replace(";", ",");

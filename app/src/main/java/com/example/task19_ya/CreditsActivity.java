@@ -11,8 +11,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+/**
+ * @author Darya 
+ * @version 1.0
+ * @since 23/03/2026
+ * This activity displays the credits information for the application.
+ */
 public class CreditsActivity extends AppCompatActivity {
 
+    /**
+     * Initializes the credits activity.
+     * <p>
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -20,11 +32,27 @@ public class CreditsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_credits);
 
     }
+
+    /**
+     * Inflates the main menu items from the resource file.
+     * <p>
+     *
+     * @param menu The options menu in which you place your items.
+     * @return true to display the menu.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
+    /**
+     * Handles selection of items from the options menu.
+     * <p>
+     *
+     * @param item The menu item that was selected.
+     * @return boolean Return false to allow normal menu processing to proceed, true to consume it here.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
