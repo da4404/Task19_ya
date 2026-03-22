@@ -68,8 +68,6 @@ public class CreditsActivity extends AppCompatActivity {
             return true;
         }
         else if (id == R.id.menu_credits) {
-            Intent intent = new Intent(this, CreditsActivity.class);
-            startActivity(intent);
             return true;
         }
 

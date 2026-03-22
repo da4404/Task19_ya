@@ -73,8 +73,6 @@ public class setting extends AppCompatActivity
             return true;
         }
         else if (id == R.id.menu_settings) {
-            Intent intent = new Intent(this, setting.class);
-            startActivity(intent);
             return true;
         }
         else if (id == R.id.menu_credits) {
