@@ -64,11 +64,11 @@ public class AddQuestionActivity extends AppCompatActivity
 
     public void saveQuestion(View view)
     {
-        String q = etQ.getText().toString();
-        String a1 = etA1.getText().toString();
-        String a2 = etA2.getText().toString();
-        String a3 = etA3.getText().toString();
-        String a4 = etA4.getText().toString();
+        String q = etQ.getText().toString().replace(";", ",");
+        String a1 = etA1.getText().toString().replace(";", ",");
+        String a2 = etA2.getText().toString().replace(";", ",");
+        String a3 = etA3.getText().toString().replace(";", ",");
+        String a4 = etA4.getText().toString().replace(";", ",");
 
         if (q.isEmpty() || a1.isEmpty() || a2.isEmpty() || a3.isEmpty() || a4.isEmpty())
         {

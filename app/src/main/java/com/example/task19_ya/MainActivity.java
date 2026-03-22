@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     String currentCorrectAnswer;
     int currentScore = 0;
     int highScore = 0;
+    String userName = "";
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -46,31 +47,35 @@ public class MainActivity extends AppCompatActivity
         displayQuestion();
         android.content.SharedPreferences sp = getSharedPreferences("QuizMasterPrefs", MODE_PRIVATE);
         highScore = sp.getInt("HighScore", 0);
-        tvDetails.setText("ניקוד: " + currentScore + " | שיא: " + highScore);
+        userName = sp.getString("UserName", "אורח");
+        tvDetails.setText("שחקן: " + userName + " | ניקוד: " + currentScore + " | שיא: " + highScore);
     }
-    public void displayQuestion() {
+    public void displayQuestion()
+    {
         if (questionsList.size() > 0)
         {
             String fullLine = questionsList.get(currentQuestionIndex);
             String[] parts = fullLine.split(";");
-            tvQuestion.setText(parts[0]);
-            currentCorrectAnswer = parts[1];
-            String[] answers = new String[4];
-            answers[0] = parts[1];
-            answers[1] = parts[2];
-            answers[2] = parts[3];
-            answers[3] = parts[4];
-            Random rnd = new Random();
-            for (int i = 0; i < answers.length; i++) {
-                int randomIndex = rnd.nextInt(answers.length);
-                String temp = answers[i];
-                answers[i] = answers[randomIndex];
-                answers[randomIndex] = temp;
+            if (parts.length >= 5) {
+                tvQuestion.setText(parts[0]);
+                currentCorrectAnswer = parts[1];
+                String[] answers = new String[4];
+                answers[0] = parts[1];
+                answers[1] = parts[2];
+                answers[2] = parts[3];
+                answers[3] = parts[4];
+                Random rnd = new Random();
+                for (int i = 0; i < answers.length; i++) {
+                    int randomIndex = rnd.nextInt(answers.length);
+                    String temp = answers[i];
+                    answers[i] = answers[randomIndex];
+                    answers[randomIndex] = temp;
+                }
+                btnA1.setText(answers[0]);
+                btnA2.setText(answers[1]);
+                btnA3.setText(answers[2]);
+                btnA4.setText(answers[3]);
             }
-            btnA1.setText(answers[0]);
-            btnA2.setText(answers[1]);
-            btnA3.setText(answers[2]);
-            btnA4.setText(answers[3]);
         }
     }
     public void loadQuestionsFromRaw()
@@ -84,7 +89,10 @@ public class MainActivity extends AppCompatActivity
             String line = bR.readLine();
             while (line != null)
             {
-                questionsList.add(line);
+                if (!line.trim().isEmpty())
+                {
+                    questionsList.add(line);
+                }
                 line = bR.readLine();
             }
             bR.close();
@@ -107,7 +115,10 @@ public class MainActivity extends AppCompatActivity
             String line = bR.readLine();
             while (line != null)
             {
-                questionsList.add(line);
+                if (!line.trim().isEmpty())
+                {
+                    questionsList.add(line);
+                }
                 line = bR.readLine();
             }
             bR.close();
@@ -128,18 +139,18 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.menu_game) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
             return true;
         }
         else if (id == R.id.menu_settings) {
             Intent intent = new Intent(this, setting.class);
             startActivity(intent);
+            finish();
             return true;
         }
         else if (id == R.id.menu_credits) {
             Intent intent = new Intent(this, CreditsActivity.class);
             startActivity(intent);
+            finish();
             return true;
         }
 
@@ -148,6 +159,11 @@ public class MainActivity extends AppCompatActivity
 
     public void checkAnswer(View view)
     {
+        if (currentCorrectAnswer == null)
+        {
+            Toast.makeText(this, "אין שאלות במאגר!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Button clickedButton = (Button) view;
         String answerSelected = clickedButton.getText().toString();
         if (answerSelected.equals(currentCorrectAnswer))
@@ -166,7 +182,7 @@ public class MainActivity extends AppCompatActivity
         {
             Toast.makeText(this, "טעות! התשובה היא: " + currentCorrectAnswer, Toast.LENGTH_SHORT).show();
         }
-        tvDetails.setText("ניקוד: " + currentScore + " | שיא: " + highScore);
+        tvDetails.setText("שחקן: " + userName + " | ניקוד: " + currentScore + " | שיא: " + highScore);
         currentQuestionIndex++;
         if (currentQuestionIndex < questionsList.size())
         {
